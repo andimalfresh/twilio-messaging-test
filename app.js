@@ -13,12 +13,17 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
-app.get('/message', (req,res) => {
+const messages = require("./messages")
+app.use("/messages", messages)
+const numbers = require("./numbers")
+app.use("/numbers", numbers)
+
+app.post('/message', (req,res) => {
 client.messages
   .create({
-     body: 'Why is Dougs name MOTHA FUKKA BIG DALLS in the API ??',
+     body: req.body.textMessage,
      from: '+17205730114',
-     to: '+19705319665'
+     to:  req.body.phoneNumbers,
    })
   .then(message => console.log(message.sid));
 })
